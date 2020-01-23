@@ -1,5 +1,7 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import time
+
+tf.disable_v2_behavior()
 
 
 class Model(object):

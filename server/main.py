@@ -4,9 +4,11 @@ from re import sub
 
 import api
 import os
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import threading
 import time
+
+tf.disable_v2_behavior()
 
 PWD = sub("([^/\.]+\.[^/\.]+)", "", os.path.realpath(__file__))
 
@@ -42,8 +44,8 @@ def train():
         pred = Prediction(data_set[0], data_set[1], 0.3)
 
         temp = ctr.get_value()
-        pred.w = tf.Variable([[temp[1]]], shape=(1,1), dtype=tf.float32)
-        pred.b = tf.Variable(temp[2], shape=(), dtype=tf.float32)
+        pred.w = tf.Variable([[temp[0]]], shape=(1,1), dtype=tf.float32)
+        pred.b = tf.Variable(temp[1], shape=(), dtype=tf.float32)
         
         weight, bias = pred.start()
         print("weight and bias:", weight, bias)
@@ -53,8 +55,7 @@ def train():
         else:
             ctr.insert_w_b(1, 1)
 
-        del pred.w
-        del pred.b
+        tf.reset_default_graph()
 
 
 def main():

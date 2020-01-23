@@ -1,6 +1,7 @@
 from scipy.io import wavfile
 from re import sub
 
+import numpy as np
 import os
 import time
 
@@ -17,11 +18,9 @@ def pretreatment(wav_file, array2_output):  # for api server
 
     os.remove(wav_file)
 
-    n = int(len(array1_input) / len(array2_output))
-
     return (
-        [[array1_input[i][0]/1000] for i in range(0, len(array1_input), n+1)],
-        [[i] for i in array2_output]
+        [[np.std(np.abs(array1_input))/1000]],
+        [[array2_output[-1]]]
     )
 
 
@@ -63,7 +62,10 @@ class Controller(object):
         self.__check_and_create_status_key()
 
         if self.key not in DATA.keys():
-            DATA[self.key] = [array[0], array[1], 0, 0]
+            DATA[self.key] = [
+                array[0], array[1],
+                1, array[1][0][0] - array[0][0][0]
+            ]
         else:
             DATA[self.key][0] = DATA[self.key][0] + array[0]
             DATA[self.key][1] = DATA[self.key][1] + array[1]
@@ -95,10 +97,10 @@ class Controller(object):
 
         try:
             return [
-                DATA[self.key][2] != 0,
                 DATA[self.key][2],
                 DATA[self.key][3]
             ]
+
         except KeyError:
             return [False]
 

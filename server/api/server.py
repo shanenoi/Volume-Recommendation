@@ -31,7 +31,6 @@ def upload(id):
     if request.method == "POST":
         fi = request.files['file']
         fi.save(PWD + "../datas/" + fi.filename)
-        time.sleep(2)
 
         ary = eval('[' + request.form['array'] + ']')
         print(ary, PWD)
@@ -57,10 +56,7 @@ def recommendation(id):
         ctr.key = id
         vl = ctr.get_value()
 
-        if vl[0]:
-            return str(vl[1]) + ',' + str(vl[2])
-        else:
-            return "0"
+        return ','.join(v1)
 
     else:
 
