@@ -1,4 +1,4 @@
-tensorflow==2.0.0-b0
+tensorflow==2.5.0rc0
 flask
 requests
 scipy
